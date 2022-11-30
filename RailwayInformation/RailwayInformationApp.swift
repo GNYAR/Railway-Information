@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct RailwayInformationApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
+  @StateObject private var dataController = DataController()
+  
+  var body: some Scene {
+    WindowGroup {
+      ContentView()
+        .environmentObject(dataController)
     }
+  }
 }
