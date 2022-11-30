@@ -47,13 +47,10 @@ class DataController: ObservableObject {
   
   func fetchTocken() {
     tokenLoading += 1
-    let id = ""
-    let secret = ""
-    
     let contentType = "application/x-www-form-urlencoded"
     let grantType = "grant_type=client_credentials"
-    let clientId = "client_id=\(id)"
-    let clientSecret = "client_secret=\(secret)"
+    let clientId = "client_id=\(Bundle.main.infoDictionary?["CLIENT_ID"] ?? "")"
+    let clientSecret = "client_secret=\(Bundle.main.infoDictionary?["CLIENT_SECRET"] ?? "")"
     let data: Data = "\(grantType)&\(clientId)&\(clientSecret)"
       .data(using: .utf8)!
     

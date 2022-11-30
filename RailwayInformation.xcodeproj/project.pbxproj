@@ -17,6 +17,7 @@
 
 /* Begin PBXFileReference section */
 		3B7E79C3292E032800D1CAC9 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
+		3BAC5484293727CC00C9ADD7 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		3BF6E85E2924C2C3009E24DD /* RailwayInformation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RailwayInformation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3BF6E8612924C2C3009E24DD /* RailwayInformationApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RailwayInformationApp.swift; sourceTree = "<group>"; };
 		3BF6E8632924C2C3009E24DD /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -62,6 +63,7 @@
 				3BF6E8652924C2CD009E24DD /* Assets.xcassets */,
 				3BF6E86A2924C2CD009E24DD /* Info.plist */,
 				3BF6E8672924C2CD009E24DD /* Preview Content */,
+				3BAC5484293727CC00C9ADD7 /* Config.xcconfig */,
 			);
 			path = RailwayInformation;
 			sourceTree = "<group>";
@@ -164,6 +166,7 @@
 /* Begin XCBuildConfiguration section */
 		3BF6E86B2924C2CD009E24DD /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3BAC5484293727CC00C9ADD7 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
