@@ -14,26 +14,13 @@ struct ContentView: View {
     if (dataController.tokenLoading) != 0 {
       Text("Loading...")
     } else {
-      List {
-        ForEach(dataController.stations) { x in
-          Text(x.StationName.Zh_tw)
-        }
-      }
-      .alert(isPresented: $dataController.showError, content: {
-        Alert(
-          title: Text("Query stations failed!"),
-          message: Text("\(dataController.error!.localizedDescription)")
-        )
-      })
-      .onAppear(perform: {
-        dataController.queryStations()
-      })
+      StationList()
+        .alert(isPresented: $dataController.showError, content: {
+          Alert(
+            title: Text("Query stations failed!"),
+            message: Text("\(dataController.error!.localizedDescription)")
+          )
+        })
     }
-  }
-}
-
-struct ContentView_Previews: PreviewProvider {
-  static var previews: some View {
-    ContentView()
   }
 }
