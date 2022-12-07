@@ -15,6 +15,8 @@ struct Token: Decodable {
 
 class DataController: ObservableObject {
   @Published var stations: [Station] = []
+  @Published var lines: [Line] = []
+  @Published var stationsOfLine: [StationOfLine] = []
   
   @Published var showError = false
   @Published var token = Token(access_token: "", expires_in: 0, token_type: "")
@@ -103,4 +105,43 @@ class DataController: ObservableObject {
     }.resume()
   }
   
+  func queryLines() {
+    guard let url = URL(string: "\(TRA_V3_BASE)/Line?$format=JSON&$orderby=IsBranch") else { return }
+    
+    session.dataTask(with: url) { data, response, error in
+      if let data = data {
+        do {
+          let xs = try JSONDecoder().decode(LinesDecode.self, from: data)
+          DispatchQueue.main.sync {
+            self.lines = xs.Lines
+            self.error = nil
+          }
+        } catch {
+          self.errorHandle(error)
+        }
+      } else {
+        self.errorHandle(error)
+      }
+    }.resume()
+  }
+  
+  func queryStationsOfLine() {
+    guard let url = URL(string: "\(TRA_V3_BASE)/StationOfLine?$format=JSON") else { return }
+    
+    session.dataTask(with: url) { data, response, error in
+      if let data = data {
+        do {
+          let xs = try JSONDecoder().decode(StationsOfLineDecode.self, from: data)
+          DispatchQueue.main.sync {
+            self.stationsOfLine = xs.StationOfLines
+            self.error = nil
+          }
+        } catch {
+          self.errorHandle(error)
+        }
+      } else {
+        self.errorHandle(error)
+      }
+    }.resume()
+  }
 }
