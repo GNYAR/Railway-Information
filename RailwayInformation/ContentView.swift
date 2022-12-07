@@ -15,6 +15,11 @@ struct ContentView: View {
       Text("Loading...")
     } else {
       StationList()
+        .onAppear(perform: {
+          dataController.queryStations()
+          dataController.queryStationsOfLine()
+          dataController.queryLines()
+        })
         .alert(isPresented: $dataController.showError, content: {
           Alert(
             title: Text("Query stations failed!"),

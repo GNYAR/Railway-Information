@@ -50,11 +50,6 @@ struct StationList: View {
         }
       }
     }
-    .onAppear(perform: {
-      dataController.queryStations()
-      dataController.queryStationsOfLine()
-      dataController.queryLines()
-    })
   }
 }
 
