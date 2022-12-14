@@ -95,4 +95,8 @@ class MemberController: ObservableObject {
     
     postUserData(url: url, data: data)
   }
+  
+  func logout() {
+    user = User()
+  }
 }

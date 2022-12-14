@@ -13,25 +13,30 @@ struct Member: View {
   @StateObject var memberController = MemberController()
   
   var body: some View {
+    let isLogin = memberController.user?.login != nil
     VStack {
       Text(memberController.user?.login ?? "尚未登入")
       
-      Button("註冊", action: { showRegister = true })
-        .sheet(isPresented: $showRegister) {
-          Register(
-            show: $showRegister,
-            controller: memberController
-          )
-        }
-      
-      Button("登入", action: { showLogin = true })
-        .sheet(isPresented: $showLogin) {
-          Register(
-            show: $showLogin,
-            controller: memberController,
-            isLoginAction: true
-          )
-        }
+      if isLogin {
+        Button("登出", action: { memberController.logout() })
+      } else {
+        Button("註冊", action: { showRegister = true })
+          .sheet(isPresented: $showRegister) {
+            Register(
+              show: $showRegister,
+              controller: memberController
+            )
+          }
+        
+        Button("登入", action: { showLogin = true })
+          .sheet(isPresented: $showLogin) {
+            Register(
+              show: $showLogin,
+              controller: memberController,
+              isLoginAction: true
+            )
+          }
+      }
     }
   }
 }
