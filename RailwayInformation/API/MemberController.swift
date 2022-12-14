@@ -8,8 +8,8 @@
 import Foundation
 
 class MemberController: ObservableObject {
+  @Published var isLoading = false
   @Published var showError = false
-  @Published var loading = 0
   @Published var user: User? = nil
   var session: URLSession = URLSession(configuration: .default)
   
@@ -40,10 +40,15 @@ class MemberController: ObservableObject {
   func errorHandle(_ error: Error?) {
     print("error \(String(describing: error))")
     self.error = error
+    DispatchQueue.main.sync {
+      self.isLoading = false
+    }
   }
   
   func createUser(login: String, email: String, password: String) {
-    loading += 1
+    if isLoading { return }
+    isLoading = true
+    
     let userInput = UserInput(user: UserLoginInput(login: login, email: email, password: password))
     let data = try? JSONEncoder().encode(userInput)
     
@@ -59,9 +64,10 @@ class MemberController: ObservableObject {
           let userError = try JSONDecoder().decode(UserError.self, from: data)
           guard userError.errorCode == nil else { throw userError }
           DispatchQueue.main.sync {
+            print(user)
             self.user = user
             self.error = nil
-            self.loading -= 1
+            self.isLoading = false
           }
         } catch {
           self.errorHandle(error)

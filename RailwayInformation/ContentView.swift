@@ -19,7 +19,7 @@ struct ContentView: View {
           Label("車站列表", systemImage: "list.dash")
         }
         Member().tabItem {
-          Label("會員專區", systemImage: "person.fill")
+          Label("我的帳號", systemImage: "person.fill")
         }
       }
       .onAppear(perform: {

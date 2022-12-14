@@ -8,8 +8,21 @@
 import SwiftUI
 
 struct Member: View {
+  @State var showRegister = false
+  @StateObject var memberController = MemberController()
+  
   var body: some View {
-    Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+    VStack {
+      Text(memberController.user?.login ?? "尚未登入")
+      
+      Button("註冊", action: { showRegister = true })
+        .sheet(isPresented: $showRegister) {
+          Register(
+            show: $showRegister,
+            controller: memberController
+          )
+        }
+    }
   }
 }
 
