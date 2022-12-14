@@ -13,10 +13,12 @@ class MemberController: ObservableObject {
   @Published var user: User? = nil
   var session: URLSession = URLSession(configuration: .default)
   
+  let SESSION_URL: String
   let USERS_URL: String
   
   init() {
     let HTTPS_HOST = "https://favqs.com/api"
+    SESSION_URL = "\(HTTPS_HOST)/session"
     USERS_URL = "\(HTTPS_HOST)/users"
     
     let contentType = "application/json"
@@ -64,7 +66,38 @@ class MemberController: ObservableObject {
           let userError = try JSONDecoder().decode(UserError.self, from: data)
           guard userError.errorCode == nil else { throw userError }
           DispatchQueue.main.sync {
-            print(user)
+            self.user = user
+            self.error = nil
+            self.isLoading = false
+          }
+        } catch {
+          self.errorHandle(error)
+        }
+      } else {
+        self.errorHandle(error)
+      }
+    }.resume()
+  }
+  
+  func login(login: String, password: String) {
+    if isLoading { return }
+    isLoading = true
+    
+    let userInput = UserInput(user: UserLoginInput(login: login, password: password))
+    let data = try? JSONEncoder().encode(userInput)
+    
+    guard let url = URL(string: SESSION_URL) else { return }
+    var request = URLRequest(url: url)
+    request.httpMethod = "POST"
+    request.httpBody = data
+    
+    session.dataTask(with: request) { data, response, error in
+      if let data = data {
+        do {
+          let user = try JSONDecoder().decode(User.self, from: data)
+          let userError = try JSONDecoder().decode(UserError.self, from: data)
+          guard userError.errorCode == nil else { throw userError }
+          DispatchQueue.main.sync {
             self.user = user
             self.error = nil
             self.isLoading = false

@@ -13,10 +13,13 @@ struct Register: View {
   @State var login: String = ""
   @State var email: String = ""
   @State var password: String = ""
+  @State var isLoginAction: Bool = false
   
   var body: some View {
+    let action = isLoginAction ? "登入" : "註冊"
+    
     if controller.user?.login != nil {
-      Text("註冊完成！")
+      Text("\(action)成功！")
         .onAppear {
           Timer.scheduledTimer(
             withTimeInterval: 3,
@@ -30,7 +33,7 @@ struct Register: View {
       Form {
         Section(
           header:
-            Text("註冊帳號")
+            Text("\(action)帳號")
             .font(.title)
             .foregroundColor(.primary),
           content: {}
@@ -39,20 +42,22 @@ struct Register: View {
         
         CField(
           input: $login,
-          title: "使用者名稱",
-          placeholder: "可包含字母、數字以及底線(_)"
+          title: "使用者名稱\(isLoginAction ? "/電子郵件" : "")",
+          placeholder: isLoginAction ? "" : "可包含字母、數字以及底線(_)"
         )
         
-        CField(
-          input: $email,
-          title: "電子郵件",
-          placeholder: "Email"
-        )
+        if !isLoginAction {
+          CField(
+            input: $email,
+            title: "電子郵件",
+            placeholder: "Email"
+          )
+        }
         
         CField(
           input: $password,
           title: "密碼",
-          placeholder: "至少５字",
+          placeholder: isLoginAction ? "" :"至少５字",
           isSecure: true
         )
         
@@ -65,12 +70,19 @@ struct Register: View {
                 .font(.body)
                 .foregroundColor(.accentColor)
               
-              Button("註冊", action: {
-                controller.createUser(
-                  login: login,
-                  email: email,
-                  password: password
-                )
+              Button("\(action)", action: {
+                if isLoginAction {
+                  controller.login(
+                    login: login,
+                    password: password
+                  )
+                } else {
+                  controller.createUser(
+                    login: login,
+                    email: email,
+                    password: password
+                  )
+                }
               })
               .font(.body)
               .buttonStyle(CButton())

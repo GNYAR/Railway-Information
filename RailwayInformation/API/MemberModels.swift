@@ -13,7 +13,7 @@ struct UserInput: Encodable {
 
 struct UserLoginInput: Encodable {
   let login: String
-  let email: String
+  var email: String?
   let password: String
 }
 

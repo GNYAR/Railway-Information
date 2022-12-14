@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct Member: View {
+  @State var showLogin = false
   @State var showRegister = false
   @StateObject var memberController = MemberController()
   
@@ -20,6 +21,15 @@ struct Member: View {
           Register(
             show: $showRegister,
             controller: memberController
+          )
+        }
+      
+      Button("登入", action: { showLogin = true })
+        .sheet(isPresented: $showLogin) {
+          Register(
+            show: $showLogin,
+            controller: memberController,
+            isLoginAction: true
           )
         }
     }
