@@ -11,3 +11,6 @@
 // API Key for tdx.transportdata.tw
 CLIENT_ID =
 CLIENT_SECRET =
+
+// API Key for favqs.com
+FAVQS =
