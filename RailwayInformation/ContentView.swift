@@ -12,20 +12,27 @@ struct ContentView: View {
   
   var body: some View {
     if (dataController.tokenLoading) != 0 {
-      Text("Loading...")
+      ProgressView("載入中...")
     } else {
-      StationList()
-        .onAppear(perform: {
-          dataController.queryStations()
-          dataController.queryStationsOfLine()
-          dataController.queryLines()
-        })
-        .alert(isPresented: $dataController.showError, content: {
-          Alert(
-            title: Text("Query stations failed!"),
-            message: Text("\(dataController.error!.localizedDescription)")
-          )
-        })
+      TabView {
+        StationList().tabItem {
+          Label("車站列表", systemImage: "list.dash")
+        }
+        Member().tabItem {
+          Label("會員專區", systemImage: "person.fill")
+        }
+      }
+      .onAppear(perform: {
+        dataController.queryStations()
+        dataController.queryStationsOfLine()
+        dataController.queryLines()
+      })
+      .alert(isPresented: $dataController.showError, content: {
+        Alert(
+          title: Text("Query stations failed!"),
+          message: Text("\(dataController.error!.localizedDescription)")
+        )
+      })
     }
   }
 }
