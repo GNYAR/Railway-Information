@@ -14,9 +14,10 @@ struct Token: Decodable {
 }
 
 class DataController: ObservableObject {
-  @Published var stations: [Station] = []
   @Published var lines: [Line] = []
+  @Published var stations: [Station] = []
   @Published var stationsOfLine: [StationOfLine] = []
+  @Published var trainsLive: [TrainLive] = []
   
   @Published var showError = false
   @Published var token = Token(access_token: "", expires_in: 0, token_type: "")
@@ -134,6 +135,29 @@ class DataController: ObservableObject {
           let xs = try JSONDecoder().decode(StationsOfLineDecode.self, from: data)
           DispatchQueue.main.sync {
             self.stationsOfLine = xs.StationOfLines
+            self.error = nil
+          }
+        } catch {
+          self.errorHandle(error)
+        }
+      } else {
+        self.errorHandle(error)
+      }
+    }.resume()
+  }
+  
+  func queryTrainsLive(stationFilter: [String]?) {
+    let filter = stationFilter != nil ?
+      "&$filter=StationID eq '\(stationFilter?.joined(separator: "' Or StationID eq '") ?? "")'" :
+      ""
+    guard let url = URL(string: "\(TRA_V3_BASE)/TrainLiveBoard?$format=JSON\(filter)") else { return }
+    
+    session.dataTask(with: url) { data, response, error in
+      if let data = data {
+        do {
+          let xs = try JSONDecoder().decode(TrainLiveBoardsDecode.self, from: data)
+          DispatchQueue.main.sync {
+            self.trainsLive = xs.TrainLiveBoards
             self.error = nil
           }
         } catch {

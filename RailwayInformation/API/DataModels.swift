@@ -21,6 +21,10 @@ struct StationsDecode: Decodable {
   let Stations: [Station]
 }
 
+struct TrainLiveBoardsDecode: Decodable {
+  let TrainLiveBoards: [TrainLive]
+}
+
 // Line
 struct Line: Decodable, Identifiable {
   var id: String { LineID }
@@ -62,4 +66,13 @@ struct StationOfLine: Decodable, Identifiable {
 
 struct StationsOfLineDecode: Decodable {
   let StationOfLines: [StationOfLine]
+}
+
+// Train
+struct TrainLive: Decodable {
+  let TrainNo: String
+  let TrainTypeName: Name
+  let StationID: String
+  let TrainStationStatus: Int // [0:'進站中', 1:'在站上', 2:'已離站']
+  let DelayTime: Int // minutes
 }
