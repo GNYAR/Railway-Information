@@ -147,7 +147,18 @@ class DataController: ObservableObject {
   }
   
   func queryTrainsLive() {
-    guard let url = URL(string: "\(TRA_V3_BASE)/TrainLiveBoard?$format=JSON") else { return }
+    guard var urlC = URLComponents(string: "\(TRA_V3_BASE)/TrainLiveBoard") else { return }
+    
+    let dateFormatter = ISO8601DateFormatter()
+    let past = Date().addingTimeInterval(-5 * 60) // past 5 minutes
+    let timeFilter = "UpdateTime gt \(dateFormatter.string(from: past))"
+    
+    urlC.queryItems = [
+      URLQueryItem(name: "$format", value: "JSON"),
+      URLQueryItem(name: "$filter", value: timeFilter)
+    ]
+    
+    guard let url = urlC.url else { return }
     
     session.dataTask(with: url) { data, response, error in
       if let data = data {
