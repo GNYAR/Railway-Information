@@ -69,7 +69,9 @@ struct StationsOfLineDecode: Decodable {
 }
 
 // Train
-struct TrainLive: Decodable {
+struct TrainLive: Decodable, Identifiable {
+  var id: String { TrainNo }
+  
   let TrainNo: String
   let TrainTypeName: Name
   let StationID: String
