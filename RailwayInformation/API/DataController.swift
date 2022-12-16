@@ -150,7 +150,7 @@ class DataController: ObservableObject {
     guard var urlC = URLComponents(string: "\(TRA_V3_BASE)/TrainLiveBoard") else { return }
     
     let dateFormatter = ISO8601DateFormatter()
-    let past = Date().addingTimeInterval(-5 * 60) // past 5 minutes
+    let past = Date().addingTimeInterval(-10 * 60) // past 10 minutes
     let timeFilter = "UpdateTime gt \(dateFormatter.string(from: past))"
     
     urlC.queryItems = [
