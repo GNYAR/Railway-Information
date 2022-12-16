@@ -11,6 +11,7 @@ struct StationList: View {
   @EnvironmentObject var dataController: DataController
   @State var selectedLine: Line? = nil
   @State var refreshTime: Date = Date()
+  let timer = Timer.publish(every: 30, on: .main, in: .common).autoconnect()
   
   func refreshTrainLive() {
     dataController.queryTrainsLive()
@@ -66,7 +67,7 @@ struct StationList: View {
         }
       }
       .onAppear(perform: refreshTrainLive)
-      .onChange(of: selectedLine?.id, perform: { _ in refreshTrainLive() })
+      .onReceive(timer, perform: { _ in refreshTrainLive() })
     }
   }
 }
