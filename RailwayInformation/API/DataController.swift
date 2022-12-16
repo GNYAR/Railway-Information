@@ -146,11 +146,8 @@ class DataController: ObservableObject {
     }.resume()
   }
   
-  func queryTrainsLive(stationFilter: [String]?) {
-    let filter = stationFilter != nil ?
-      "&$filter=StationID eq '\(stationFilter?.joined(separator: "' Or StationID eq '") ?? "")'" :
-      ""
-    guard let url = URL(string: "\(TRA_V3_BASE)/TrainLiveBoard?$format=JSON\(filter)") else { return }
+  func queryTrainsLive() {
+    guard let url = URL(string: "\(TRA_V3_BASE)/TrainLiveBoard?$format=JSON") else { return }
     
     session.dataTask(with: url) { data, response, error in
       if let data = data {
