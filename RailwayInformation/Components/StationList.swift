@@ -101,7 +101,7 @@ struct StationRow: View {
     let trains = dataController.trainsLive
       .filter({ $0.StationID == id })
     
-    HStack {
+    HStack(spacing: 0) {
       Text(name.Zh_tw)
       
       Spacer()
@@ -117,8 +117,23 @@ struct TrainLiveTag: View {
   let train: TrainLive?
   
   var body: some View {
-    HStack {
-      Text(train?.TrainNo ?? "")
-    }
+    Button(train?.TrainNo ?? "", action: {
+      print(train)
+    })
+    .buttonStyle(CTagButton(color: Color("TrainType\(train?.TrainTypeCode ?? "")")))
+    .scaleEffect(0.8)
+  }
+}
+
+struct CTagButton: ButtonStyle {
+  var color: Color = Color.accentColor
+  
+  func makeBody(configuration: Configuration) -> some View {
+    configuration.label
+      .padding(.horizontal, 8)
+      .padding(.vertical, 8)
+      .background(color)
+      .foregroundColor(.white)
+      .clipShape(RoundedRectangle(cornerRadius: 8))
   }
 }

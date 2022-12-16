@@ -73,6 +73,7 @@ struct TrainLive: Decodable, Identifiable {
   var id: String { TrainNo }
   
   let TrainNo: String
+  let TrainTypeCode: String // ['1: 太魯閣', '2: 普悠瑪', '3: 自強', '4: 莒光', '5: 復興', '6: 區間', '7: 普快', '10: 區間快', '11: 自強(3000)']
   let TrainTypeName: Name
   let StationID: String
   let TrainStationStatus: Int // [0:'進站中', 1:'在站上', 2:'已離站']

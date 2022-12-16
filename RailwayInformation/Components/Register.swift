@@ -121,4 +121,3 @@ struct CButton: ButtonStyle {
       .clipShape(RoundedRectangle(cornerRadius: 8))
   }
 }
-
