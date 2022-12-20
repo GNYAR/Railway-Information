@@ -17,6 +17,7 @@ class DataController: ObservableObject {
   @Published var lines: [Line] = []
   @Published var stations: [String: Station] = [:]
   @Published var stationsOfLine: [StationOfLine] = []
+  @Published var stationTimeTables: [Int: [StationTimeTable]] = [:]
   @Published var stationTrainsLive: [String: [TrainLive]] = [:]
   
   @Published var showError = false
@@ -137,6 +138,29 @@ class DataController: ObservableObject {
           let xs = try JSONDecoder().decode(StationsOfLineDecode.self, from: data)
           DispatchQueue.main.sync {
             self.stationsOfLine = xs.StationOfLines
+            self.error = nil
+          }
+        } catch {
+          self.errorHandle(error)
+        }
+      } else {
+        self.errorHandle(error)
+      }
+    }.resume()
+  }
+  
+  func queryStationTimeTables(_ id: String) {
+    guard let url = URL(string: "\(TRA_V3_BASE)/DailyStationTimetable/Today/Station/\(id)?$format=JSON") else { return }
+    
+    session.dataTask(with: url) { data, response, error in
+      if let data = data {
+        do {
+          let xs = try JSONDecoder().decode(StationTimeTablesDecode.self, from: data).StationTimetables
+          
+          DispatchQueue.main.sync {
+            xs.forEach({ x in
+              self.stationTimeTables[x.Direction] = x.TimeTables
+            })
             self.error = nil
           }
         } catch {
