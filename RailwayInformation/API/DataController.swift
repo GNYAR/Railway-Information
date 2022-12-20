@@ -15,6 +15,7 @@ struct Token: Decodable {
 
 class DataController: ObservableObject {
   @Published var lines: [Line] = []
+  @Published var loading = 0
   @Published var stations: [String: Station] = [:]
   @Published var stationsOfLine: [StationOfLine] = []
   @Published var stationTimeTables: [Int: [StationTimeTable]] = [:]
@@ -150,6 +151,7 @@ class DataController: ObservableObject {
   }
   
   func queryStationTimeTables(_ id: String) {
+    loading += 1
     guard let url = URL(string: "\(TRA_V3_BASE)/DailyStationTimetable/Today/Station/\(id)?$format=JSON") else { return }
     
     session.dataTask(with: url) { data, response, error in
@@ -159,8 +161,9 @@ class DataController: ObservableObject {
           
           DispatchQueue.main.sync {
             xs.forEach({ x in
-              self.stationTimeTables[x.Direction] = x.TimeTables
+              self.stationTimeTables[x.Direction] = x.TimeTables.sorted(by: { a, b in a.id < b.id })
             })
+            self.loading -= 1
             self.error = nil
           }
         } catch {

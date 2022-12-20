@@ -100,7 +100,7 @@ struct StationRow: View {
   
   var body: some View {
     ZStack {
-      NavigationLink(destination: StationView()) { EmptyView() }
+      NavigationLink(destination: StationView(id: id)) { EmptyView() }
         .opacity(0)
       
       HStack(spacing: 0) {
