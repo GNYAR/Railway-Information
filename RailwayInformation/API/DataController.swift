@@ -15,7 +15,7 @@ struct Token: Decodable {
 
 class DataController: ObservableObject {
   @Published var lines: [Line] = []
-  @Published var stations: [Station] = []
+  @Published var stations: [String: Station] = [:]
   @Published var stationsOfLine: [StationOfLine] = []
   @Published var stationTrainsLive: [String: [TrainLive]] = [:]
   
@@ -92,9 +92,11 @@ class DataController: ObservableObject {
     session.dataTask(with: url) { data, response, error in
       if let data = data {
         do {
-          let xs = try JSONDecoder().decode(StationsDecode.self, from: data)
+          let xs = try JSONDecoder().decode(StationsDecode.self, from: data).Stations
+          let stationDict = Dictionary(grouping: xs, by: { $0.StationID }).mapValues({ $0.first! })
+          
           DispatchQueue.main.sync {
-            self.stations = xs.Stations
+            self.stations = stationDict
             self.error = nil
           }
         } catch {

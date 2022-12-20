@@ -49,7 +49,9 @@ struct StationList: View {
           Text("前更新")
         }) {
           if(selectedLine == nil) {
-            ForEach(dataController.stations) { x in
+            ForEach(dataController.stations.sorted(by: {a, b in
+              a.key < b.key
+            }), id: \.key) { _, x in
               StationRow(id: x.StationID, name: x.StationName)
             }
           } else {
