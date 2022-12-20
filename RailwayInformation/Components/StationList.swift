@@ -24,45 +24,38 @@ struct StationList: View {
     )?.Stations ?? []
     
     VStack(alignment: .leading) {
-      Group {
-        DisclosureGroup {
-          LineChips(selected: $selectedLine, lines: dataController.lines.filter({ !$0.IsBranch }))
-          LineChips(selected: $selectedLine, lines: dataController.lines.filter({ $0.IsBranch }))
-        } label: {
-          let lineName = selectedLine?.LineName.Zh_tw ?? "全部"
-          let sectionName = selectedLine?.LineSectionName.Zh_tw ?? ""
-          
-          HStack(alignment: .bottom) {
-            Text(lineName)
-              .font(.title)
-            
-            Text(sectionName)
-              .font(.subheadline)
-              .foregroundColor(.secondary)
-            
-            Spacer()
-          }
-        }
+      DisclosureGroup {
+        LineChips(selected: $selectedLine, lines: dataController.lines.filter({ !$0.IsBranch }))
+        LineChips(selected: $selectedLine, lines: dataController.lines.filter({ $0.IsBranch }))
+      } label: {
+        let lineName = selectedLine?.LineName.Zh_tw ?? "全部"
         
-        HStack(spacing: 0) {
-          Spacer()
-          
-          Text(refreshTime, style: .relative)
-          Text("前更新")
+        HStack(alignment: .bottom) {
+          Text(lineName)
+            .font(.title)
         }
-        .font(.footnote)
-        .foregroundColor(.secondary)
       }
       .padding(.horizontal)
       
       List {
-        if(selectedLine == nil) {
-          ForEach(dataController.stations) { x in
-            StationRow(id: x.StationID, name: x.StationName)
-          }
-        } else {
-          ForEach(filteredStations) { x in
-            StationRow(id: x.StationID, name: x.StationName)
+        Section(header: HStack(spacing: 0) {
+          let sectionName = selectedLine?.LineSectionName.Zh_tw ?? ""
+          
+          Text(sectionName)
+          
+          Spacer()
+          
+          Text(refreshTime, style: .relative)
+          Text("前更新")
+        }) {
+          if(selectedLine == nil) {
+            ForEach(dataController.stations) { x in
+              StationRow(id: x.StationID, name: x.StationName)
+            }
+          } else {
+            ForEach(filteredStations) { x in
+              StationRow(id: x.StationID, name: x.StationName)
+            }
           }
         }
       }
