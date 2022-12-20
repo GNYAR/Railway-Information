@@ -23,46 +23,51 @@ struct StationList: View {
       where: { $0.LineID == selectedLine?.LineID }
     )?.Stations ?? []
     
-    VStack(alignment: .leading) {
-      DisclosureGroup {
-        LineChips(selected: $selectedLine, lines: dataController.lines.filter({ !$0.IsBranch }))
-        LineChips(selected: $selectedLine, lines: dataController.lines.filter({ $0.IsBranch }))
-      } label: {
-        let lineName = selectedLine?.LineName.Zh_tw ?? "全部"
-        
-        HStack(alignment: .bottom) {
-          Text(lineName)
-            .font(.title)
+    NavigationView {
+      VStack(alignment: .leading) {
+        DisclosureGroup {
+          LineChips(selected: $selectedLine, lines: dataController.lines.filter({ !$0.IsBranch }))
+          LineChips(selected: $selectedLine, lines: dataController.lines.filter({ $0.IsBranch }))
+        } label: {
+          let lineName = selectedLine?.LineName.Zh_tw ?? "全部"
+          
+          HStack(alignment: .bottom) {
+            Text(lineName)
+              .font(.title)
+          }
         }
-      }
-      .padding(.horizontal)
-      
-      List {
-        Section(header: HStack(spacing: 0) {
-          let sectionName = selectedLine?.LineSectionName.Zh_tw ?? ""
-          
-          Text(sectionName)
-          
-          Spacer()
-          
-          Text(refreshTime, style: .relative)
-          Text("前更新")
-        }) {
-          if(selectedLine == nil) {
-            ForEach(dataController.stations.sorted(by: {a, b in
-              a.key < b.key
-            }), id: \.key) { _, x in
-              StationRow(id: x.StationID, name: x.StationName)
-            }
-          } else {
-            ForEach(filteredStations) { x in
-              StationRow(id: x.StationID, name: x.StationName)
+        .padding(.horizontal)
+        
+        List {
+          Section(header: HStack(spacing: 0) {
+            let sectionName = selectedLine?.LineSectionName.Zh_tw ?? ""
+            
+            Text(sectionName)
+            
+            Spacer()
+            
+            Text(refreshTime, style: .relative)
+            Text("前更新")
+          }) {
+            if(selectedLine == nil) {
+              ForEach(dataController.stations.sorted(by: {a, b in
+                a.key < b.key
+              }), id: \.key) { _, x in
+                StationRow(id: x.StationID, name: x.StationName)
+              }
+            } else {
+              ForEach(filteredStations) { x in
+                StationRow(id: x.StationID, name: x.StationName)
+              }
             }
           }
         }
+        .listStyle(PlainListStyle())
+        .onAppear(perform: refreshTrainLive)
+        .onReceive(timer, perform: { _ in refreshTrainLive() })
       }
-      .onAppear(perform: refreshTrainLive)
-      .onReceive(timer, perform: { _ in refreshTrainLive() })
+      .navigationTitle("車站列表")
+      .navigationBarHidden(true)
     }
   }
 }
@@ -94,13 +99,18 @@ struct StationRow: View {
   let name: Name
   
   var body: some View {
-    HStack(spacing: 0) {
-      Text(name.Zh_tw)
+    ZStack {
+      NavigationLink(destination: StationView()) { EmptyView() }
+        .opacity(0)
       
-      Spacer()
-      
-      ForEach(dataController.stationTrainsLive[id] ?? []) { y in
-        TrainLiveTag(train: y)
+      HStack(spacing: 0) {
+        Text(name.Zh_tw)
+        
+        Spacer()
+        
+        ForEach(dataController.stationTrainsLive[id] ?? []) { y in
+          TrainLiveTag(train: y)
+        }
       }
     }
   }
