@@ -21,6 +21,14 @@ struct StationsDecode: Decodable {
   let Stations: [Station]
 }
 
+struct StationsOfLineDecode: Decodable {
+  let StationOfLines: [StationOfLine]
+}
+
+struct StationTimeTablesDecode: Decodable {
+  let StationTimetables: [StationTimeTables]
+}
+
 struct TrainLiveBoardsDecode: Decodable {
   let TrainLiveBoards: [TrainLive]
 }
@@ -64,8 +72,23 @@ struct StationOfLine: Decodable, Identifiable {
   let Stations: [LineStation]
 }
 
-struct StationsOfLineDecode: Decodable {
-  let StationOfLines: [StationOfLine]
+// TimeTable
+struct StationTimeTable: Decodable, Identifiable {
+  var id: Int { Sequence }
+  
+  let Sequence: Int
+  let TrainNo: String
+  let TrainTypeCode: String
+  let TrainTypeName: Name
+  let DestinationStationID: String
+  let DestinationStationName: Name
+  let ArrivalTime: String
+  let DepartureTime: String
+}
+
+struct StationTimeTables: Decodable {
+  let Direction: Int // [0:'順行',1:'逆行']
+  let TimeTables: [StationTimeTable]
 }
 
 // Train
