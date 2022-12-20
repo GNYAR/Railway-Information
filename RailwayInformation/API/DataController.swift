@@ -17,7 +17,7 @@ class DataController: ObservableObject {
   @Published var lines: [Line] = []
   @Published var stations: [Station] = []
   @Published var stationsOfLine: [StationOfLine] = []
-  @Published var trainsLive: [TrainLive] = []
+  @Published var stationTrainsLive: [String: [TrainLive]] = [:]
   
   @Published var showError = false
   @Published var token = Token(access_token: "", expires_in: 0, token_type: "")
@@ -163,9 +163,11 @@ class DataController: ObservableObject {
     session.dataTask(with: url) { data, response, error in
       if let data = data {
         do {
-          let xs = try JSONDecoder().decode(TrainLiveBoardsDecode.self, from: data)
+          let xs = try JSONDecoder().decode(TrainLiveBoardsDecode.self, from: data).TrainLiveBoards
+          let stationGroup = Dictionary(grouping: xs, by: { $0.StationID })
+          
           DispatchQueue.main.sync {
-            self.trainsLive = xs.TrainLiveBoards
+            self.stationTrainsLive = stationGroup
             self.error = nil
           }
         } catch {

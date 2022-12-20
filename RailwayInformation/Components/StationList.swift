@@ -92,15 +92,12 @@ struct StationRow: View {
   let name: Name
   
   var body: some View {
-    let trains = dataController.trainsLive
-      .filter({ $0.StationID == id })
-    
     HStack(spacing: 0) {
       Text(name.Zh_tw)
       
       Spacer()
       
-      ForEach(trains) { y in
+      ForEach(dataController.stationTrainsLive[id] ?? []) { y in
         TrainLiveTag(train: y)
       }
     }
