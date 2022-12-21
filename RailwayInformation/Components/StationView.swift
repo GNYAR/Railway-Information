@@ -9,7 +9,7 @@ import SwiftUI
 
 struct StationView: View {
   @EnvironmentObject var dataController: DataController
-  @State var nextTrain = 0
+  @State var nextTrainSequence: Int? = nil
   @State var updatedTime = Date()
   @State var selectedDirection = 0
   let id: String
@@ -20,12 +20,12 @@ struct StationView: View {
     let station = dataController.stations[id]
     let xs = dataController.stationTimeTables[selectedDirection] ?? []
     
-    ScrollViewReader { scrollView in
+    ScrollViewReader { proxy in
       if (dataController.loading != 0) {
         ProgressView()
       } else {
         ScrollView(.vertical) {
-          LazyVStack(pinnedViews: [.sectionHeaders]) {
+          LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
             Section(
               header: StationTimeHeader(
                 selectedDirection: $selectedDirection,
@@ -35,7 +35,21 @@ struct StationView: View {
               ForEach(xs) { x in
                 StationTimeRow(x: x)
                   .padding(.horizontal)
-                  .padding(.vertical, -2)
+                  .padding(.vertical, 2)
+                  .background(Group {
+                    if (nextTrainSequence == x.id) {
+                      LinearGradient(
+                        gradient: Gradient(
+                          colors: [
+                            Color.accentColor.opacity(0.2),
+                            Color(.systemBackground)
+                          ]
+                        ),
+                        startPoint: .leading,
+                        endPoint: .trailing
+                      )
+                    }
+                  })
                 
                 Divider()
               }
@@ -43,9 +57,13 @@ struct StationView: View {
           }
           .onAppear() {
             if xs.isEmpty { return }
-            // for auto scroll
-            // scrollView.scrollTo(xs[xs.count - 1].id)
+            updateNextTrainSequence(xs, now: updatedTime)
+            proxy.scrollTo(nextTrainSequence! - 2)
           }
+          .onChange(of: selectedDirection, perform: { x in
+            let data = dataController.stationTimeTables[x] ?? []
+            updateNextTrainSequence(data, now: updatedTime)
+          })
         }
       }
     }
@@ -56,12 +74,20 @@ struct StationView: View {
     }
     .onReceive(timer, perform: { _ in
       refreshTrainLive()
+      updateNextTrainSequence(xs, now: updatedTime)
     })
   }
   
   func refreshTrainLive() {
     dataController.queryTrainsLive()
     updatedTime = Date()
+  }
+  
+  func updateNextTrainSequence(_ xs: [StationTimeTable], now: Date) {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "HH:mm"
+    let updatedTimeString = dateFormatter.string(from: now)
+    nextTrainSequence = xs.first(where: { updatedTimeString <= $0.ArrivalTime })?.id
   }
 }
 
@@ -100,9 +126,6 @@ struct StationTimeRow: View {
     let delayTime = dataController.trainsLive[x.TrainNo]?.DelayTime
     
     HStack {
-      Circle()
-        .frame(width: 12, height: 12)
-      
       Text(x.ArrivalTime)
         .font(.system(.body, design: .monospaced))
       
