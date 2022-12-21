@@ -10,9 +10,11 @@ import SwiftUI
 struct StationView: View {
   @EnvironmentObject var dataController: DataController
   @State var nextTrain = 0
+  @State var updatedTime = Date()
   @State var selectedDirection = 0
   let id: String
-  let directions = ["順行", "逆行"]
+  
+  let timer = Timer.publish(every: 30, on: .main, in: .common).autoconnect()
   
   var body: some View {
     let station = dataController.stations[id]
@@ -25,18 +27,15 @@ struct StationView: View {
         ScrollView(.vertical) {
           LazyVStack(pinnedViews: [.sectionHeaders]) {
             Section(
-              header: Picker("方向", selection: $selectedDirection) {
-                ForEach(directions.indices) { i in
-                  Text(directions[i])
-                }
-              }
-              .pickerStyle(SegmentedPickerStyle())
-              .background(Color(.systemBackground))
+              header: StationTimeHeader(
+                selectedDirection: $selectedDirection,
+                updatedTime: updatedTime
+              ).id(updatedTime)
             ) {
               ForEach(xs) { x in
                 StationTimeRow(x: x)
                   .padding(.horizontal)
-                  .padding(.vertical, 8)
+                  .padding(.vertical, -2)
                 
                 Divider()
               }
@@ -51,14 +50,55 @@ struct StationView: View {
       }
     }
     .navigationTitle(station?.StationName.Zh_tw ?? "Not Found")
-    .onAppear(perform: { dataController.queryStationTimeTables(id) })
+    .onAppear() {
+      dataController.queryStationTimeTables(id)
+      refreshTrainLive()
+    }
+    .onReceive(timer, perform: { _ in
+      refreshTrainLive()
+    })
+  }
+  
+  func refreshTrainLive() {
+    dataController.queryTrainsLive()
+    updatedTime = Date()
+  }
+}
+
+struct StationTimeHeader: View {
+  @Binding var selectedDirection: Int
+  @State var updatedTime: Date
+  let directions = ["順行", "逆行"]
+  
+  var body: some View {
+    VStack(spacing: 4) {
+      HStack(spacing: 0) {
+        Spacer()
+        
+        Text(updatedTime, style: .relative)
+        Text("前更新")
+      }
+      .padding(.top, 4)
+      .padding(.horizontal)
+      
+      Picker("方向", selection: $selectedDirection) {
+        ForEach(directions.indices) { i in
+          Text(directions[i])
+        }
+      }
+      .pickerStyle(SegmentedPickerStyle())
+    }
+    .background(Color(.systemBackground))
   }
 }
 
 struct StationTimeRow: View {
+  @EnvironmentObject var dataController: DataController
   let x: StationTimeTable
   
   var body: some View {
+    let delayTime = dataController.trainsLive[x.TrainNo]?.DelayTime
+    
     HStack {
       Circle()
         .frame(width: 12, height: 12)
@@ -72,6 +112,9 @@ struct StationTimeRow: View {
       Text(x.DestinationStationName.Zh_tw)
       
       Spacer()
+      
+      if delayTime == 0 { Text("準點").foregroundColor(.green) }
+      else if delayTime != nil { Text("晚\(delayTime!)分").foregroundColor(.red) }
     }
   }
 }

@@ -20,6 +20,7 @@ class DataController: ObservableObject {
   @Published var stationsOfLine: [StationOfLine] = []
   @Published var stationTimeTables: [Int: [StationTimeTable]] = [:]
   @Published var stationTrainsLive: [String: [TrainLive]] = [:]
+  @Published var trainsLive: [String: TrainLive] = [:]
   
   @Published var showError = false
   @Published var token = Token(access_token: "", expires_in: 0, token_type: "")
@@ -194,9 +195,11 @@ class DataController: ObservableObject {
         do {
           let xs = try JSONDecoder().decode(TrainLiveBoardsDecode.self, from: data).TrainLiveBoards
           let stationGroup = Dictionary(grouping: xs, by: { $0.StationID })
+          let trainsLive = Dictionary(grouping: xs, by: { $0.TrainNo }).mapValues({ $0.first! })
           
           DispatchQueue.main.sync {
             self.stationTrainsLive = stationGroup
+            self.trainsLive = trainsLive
             self.error = nil
           }
         } catch {
