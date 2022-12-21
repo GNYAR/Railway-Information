@@ -31,7 +31,7 @@ struct StationView: View {
                 }
               }
               .pickerStyle(SegmentedPickerStyle())
-              .background(Color(.lightGray))
+              .background(Color(.systemBackground))
             ) {
               ForEach(xs) { x in
                 StationTimeRow(x: x)
@@ -62,10 +62,15 @@ struct StationTimeRow: View {
     HStack {
       Circle()
         .frame(width: 12, height: 12)
+      
       Text(x.ArrivalTime)
         .font(.system(.body, design: .monospaced))
-      Text(x.TrainNo)
+      
+      TrainTag(trainNo: x.TrainNo, trainTypeCode: x.TrainTypeCode)
+        .frame(width: 80, alignment: .center)
+      
       Text(x.DestinationStationName.Zh_tw)
+      
       Spacer()
     }
   }

@@ -109,22 +109,10 @@ struct StationRow: View {
         Spacer()
         
         ForEach(dataController.stationTrainsLive[id] ?? []) { y in
-          TrainLiveTag(train: y)
+          TrainTag(trainNo: y.TrainNo, trainTypeCode: y.TrainTypeCode)
         }
       }
     }
-  }
-}
-
-struct TrainLiveTag: View {
-  let train: TrainLive?
-  
-  var body: some View {
-    Button(train?.TrainNo ?? "", action: {
-      print(train)
-    })
-    .buttonStyle(CTagButton(color: Color("TrainType\(train?.TrainTypeCode ?? "")")))
-    .scaleEffect(0.8)
   }
 }
 
