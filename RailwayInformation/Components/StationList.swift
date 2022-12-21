@@ -31,7 +31,7 @@ struct StationList: View {
               .font(.title)
           }
         }
-        .padding(.horizontal)
+        .padding([.horizontal, .top])
         
         List {
           Section(header: HStack(spacing: 0) {
