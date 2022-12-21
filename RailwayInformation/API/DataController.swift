@@ -113,13 +113,22 @@ class DataController: ObservableObject {
   
   func queryLines() {
     guard let url = URL(string: "\(TRA_V3_BASE)/Line?$format=JSON&$orderby=IsBranch") else { return }
+    let lineOrder = [
+      "WL": 1,
+      "WL-C": 2,
+      "EL": 3,
+      "SL": 4,
+      "SU": 5
+    ]
     
     session.dataTask(with: url) { data, response, error in
       if let data = data {
         do {
-          let xs = try JSONDecoder().decode(LinesDecode.self, from: data)
+          let xs = try JSONDecoder().decode(LinesDecode.self, from: data).Lines
           DispatchQueue.main.sync {
-            self.lines = xs.Lines
+            self.lines = xs.sorted(by: { a, b in
+              lineOrder[a.LineID] ?? 99 < lineOrder[b.LineID] ?? 99
+            })
             self.error = nil
           }
         } catch {
