@@ -5,12 +5,23 @@
 //  Created by User20 on 2022/12/14.
 //
 
-import Foundation
+import SwiftUI
 
 class MemberController: ObservableObject {
+  @AppStorage("user") var appUser: Data?
+  
   @Published var isLoading = false
   @Published var showError = false
-  @Published var user: User? = nil
+  @Published var user: User? = nil {
+    didSet {
+      do {
+        appUser = try JSONEncoder().encode(user)
+      } catch {
+        print(error)
+      }
+    }
+  }
+  
   var session: URLSession = URLSession(configuration: .default)
   
   let SESSION_URL: String
@@ -29,6 +40,14 @@ class MemberController: ObservableObject {
       "authorization": auth
     ]
     session = URLSession(configuration: config)
+    
+    if let appUser = appUser {
+      do {
+        user = try JSONDecoder().decode(User.self, from: appUser)
+      } catch {
+        print(error)
+      }
+    }
   }
   
   var error: Error? {

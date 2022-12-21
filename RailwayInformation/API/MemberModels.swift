@@ -17,7 +17,7 @@ struct UserLoginInput: Encodable {
   let password: String
 }
 
-struct User: Decodable {
+struct User: Codable {
   var userToken: String?
   var login: String?
   
