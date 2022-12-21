@@ -1,0 +1,16 @@
+//
+//  Config.xcconfig
+//  RailwayInformation
+//
+//  Created by User20 on 2022/11/30.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+// API Key for tdx.transportdata.tw
+CLIENT_ID =
+CLIENT_SECRET =
+
+// API Key for favqs.com
+FAVQS =
