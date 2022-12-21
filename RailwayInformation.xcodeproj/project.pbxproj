@@ -3,11 +3,14 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		3B1466502952CDC0003CED7F /* TrainTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B14664F2952CDC0003CED7F /* TrainTag.swift */; };
+		3B14665629532796003CED7F /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 3B14665529532796003CED7F /* Lottie */; };
+		3B146659295329D2003CED7F /* loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 3B146658295329D2003CED7F /* loading.json */; };
+		3B14666329532CC7003CED7F /* LottieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B14666229532CC7003CED7F /* LottieView.swift */; };
 		3B5A9DFE2951B73A00002078 /* StationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5A9DFD2951B73A00002078 /* StationView.swift */; };
 		3B7E79C4292E032800D1CAC9 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B7E79C3292E032800D1CAC9 /* DataController.swift */; };
 		3BAC5490293735BC00C9ADD7 /* StationList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BAC548F293735BC00C9ADD7 /* StationList.swift */; };
@@ -24,6 +27,8 @@
 
 /* Begin PBXFileReference section */
 		3B14664F2952CDC0003CED7F /* TrainTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainTag.swift; sourceTree = "<group>"; };
+		3B146658295329D2003CED7F /* loading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = loading.json; sourceTree = "<group>"; };
+		3B14666229532CC7003CED7F /* LottieView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LottieView.swift; sourceTree = "<group>"; };
 		3B5A9DFD2951B73A00002078 /* StationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationView.swift; sourceTree = "<group>"; };
 		3B7E79C3292E032800D1CAC9 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		3BAC5484293727CC00C9ADD7 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
@@ -46,12 +51,22 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3B14665629532796003CED7F /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3B14665B295329E4003CED7F /* Lottie */ = {
+			isa = PBXGroup;
+			children = (
+				3B146658295329D2003CED7F /* loading.json */,
+				3B14666229532CC7003CED7F /* LottieView.swift */,
+			);
+			path = Lottie;
+			sourceTree = "<group>";
+		};
 		3BAC548E293735AB00C9ADD7 /* Components */ = {
 			isa = PBXGroup;
 			children = (
@@ -67,6 +82,7 @@
 		3BF6E8552924C2C3009E24DD = {
 			isa = PBXGroup;
 			children = (
+				3B14665B295329E4003CED7F /* Lottie */,
 				3BF6E8602924C2C3009E24DD /* RailwayInformation */,
 				3BF6E85F2924C2C3009E24DD /* Products */,
 			);
@@ -130,6 +146,9 @@
 			dependencies = (
 			);
 			name = RailwayInformation;
+			packageProductDependencies = (
+				3B14665529532796003CED7F /* Lottie */,
+			);
 			productName = RailwayInformation;
 			productReference = 3BF6E85E2924C2C3009E24DD /* RailwayInformation.app */;
 			productType = "com.apple.product-type.application";
@@ -157,6 +176,9 @@
 				Base,
 			);
 			mainGroup = 3BF6E8552924C2C3009E24DD;
+			packageReferences = (
+				3B14665429532796003CED7F /* XCRemoteSwiftPackageReference "lottie-ios" */,
+			);
 			productRefGroup = 3BF6E85F2924C2C3009E24DD /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -173,6 +195,7 @@
 			files = (
 				3BF6E8692924C2CD009E24DD /* Preview Assets.xcassets in Resources */,
 				3BF6E8662924C2CD009E24DD /* Assets.xcassets in Resources */,
+				3B146659295329D2003CED7F /* loading.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -191,6 +214,7 @@
 				3BF6E8732924D290009E24DD /* DataModels.swift in Sources */,
 				3BF6E8642924C2C3009E24DD /* ContentView.swift in Sources */,
 				3BF6E8622924C2C3009E24DD /* RailwayInformationApp.swift in Sources */,
+				3B14666329532CC7003CED7F /* LottieView.swift in Sources */,
 				3B7E79C4292E032800D1CAC9 /* DataController.swift in Sources */,
 				3B5A9DFE2951B73A00002078 /* StationView.swift in Sources */,
 				3B1466502952CDC0003CED7F /* TrainTag.swift in Sources */,
@@ -381,6 +405,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		3B14665429532796003CED7F /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.5.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3B14665529532796003CED7F /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3B14665429532796003CED7F /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			productName = Lottie;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3BF6E8562924C2C3009E24DD /* Project object */;
 }

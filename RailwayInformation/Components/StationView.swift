@@ -22,7 +22,7 @@ struct StationView: View {
     
     ScrollViewReader { proxy in
       if (dataController.loading != 0) {
-        ProgressView()
+        LottieView(lottieFile: "loading", loop: .loop)
       } else {
         ScrollView(.vertical) {
           LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {

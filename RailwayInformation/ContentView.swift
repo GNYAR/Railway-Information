@@ -12,7 +12,7 @@ struct ContentView: View {
   
   var body: some View {
     if (dataController.tokenLoading) != 0 {
-      ProgressView("載入中...")
+      LottieView(lottieFile: "loading", loop: .loop)
     } else {
       TabView {
         StationList().tabItem {
