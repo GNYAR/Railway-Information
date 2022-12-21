@@ -9,14 +9,9 @@ import SwiftUI
 
 struct StationList: View {
   @EnvironmentObject var dataController: DataController
-  @State var selectedLine: Line? = nil
   @State var refreshTime: Date = Date()
+  @State var selectedLine: Line? = nil
   let timer = Timer.publish(every: 30, on: .main, in: .common).autoconnect()
-  
-  func refreshTrainLive() {
-    dataController.queryTrainsLive()
-    refreshTime = Date()
-  }
   
   var body: some View {
     let filteredStations = dataController.stationsOfLine.first(
@@ -69,6 +64,11 @@ struct StationList: View {
       .navigationTitle("車站列表")
       .navigationBarHidden(true)
     }
+  }
+  
+  func refreshTrainLive() {
+    dataController.queryTrainsLive()
+    refreshTime = Date()
   }
 }
 
