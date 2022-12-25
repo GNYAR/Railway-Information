@@ -121,6 +121,7 @@ struct CTagButton: ButtonStyle {
   
   func makeBody(configuration: Configuration) -> some View {
     configuration.label
+      .lineLimit(1)
       .padding(.horizontal, 8)
       .padding(.vertical, 8)
       .background(color)
