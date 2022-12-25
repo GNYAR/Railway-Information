@@ -33,14 +33,13 @@ struct TrainView: View {
       .padding()
       .background(Color("TrainType\(trainTypeCode)"))
       
-      Group {
-        if dataController.loading == 0 {
-          TrainInfoView(trainInfo: timeTable?.TrainInfo)
-        } else {
-          LottieView(lottieFile: "loading", loop: .loop)
-        }
+      if dataController.loading == 0 {
+        TrainInfoView(trainInfo: timeTable?.TrainInfo)
+          .padding(.horizontal)
+        TrainTimeView(stopTimes: timeTable?.StopTimes)
+      } else {
+        LottieView(lottieFile: "loading", loop: .loop)
       }
-      .padding(.horizontal)
       
       Spacer()
     }
@@ -96,3 +95,71 @@ struct TrainInfoView: View {
   }
 }
 
+struct TrainTimeView: View {
+  let stopTimes: [StopTime]?
+  
+  var body: some View {
+    if stopTimes == nil {
+      Text("查無資料")
+    } else {
+      let xs = stopTimes!
+      
+      List {
+        Section(
+          header: VStack(spacing: 0) {
+            HStack {
+              let first = xs.first!
+              let last = xs.last!
+              
+              Text("\(first.ArrivalTime) \(first.StationName.Zh_tw)")
+              Text("-")
+              Text("\(last.ArrivalTime) \(last.StationName.Zh_tw)")
+              
+              Spacer()
+            }
+            .padding(.vertical, 4)
+            
+            Divider()
+            
+            StopRow(
+              x: StopTime(
+                StopSequence: 0,
+                StationID: "",
+                StationName: Name(Zh_tw: "車站名稱", En: "Station"),
+                ArrivalTime: "到站時間",
+                DepartureTime: "離站時間",
+                SuspendedFlag: 0
+              )
+            )
+            .padding(.vertical, 4)
+          }
+        ) {
+          ForEach(xs) { x in
+            StopRow(x: x)
+          }
+        }
+      }
+    }
+  }
+}
+
+struct StopRow: View {
+  let x: StopTime
+  
+  var body: some View {
+    HStack {
+      Text(x.StationName.Zh_tw)
+        .fontWeight(.regular)
+        .frame(width: 100, alignment: .leading)
+      
+      Group {
+        Text(x.ArrivalTime)
+        Text(x.DepartureTime)
+      }
+      .font(.system(.body, design: .monospaced))
+      .frame(width: 100)
+      
+      Spacer()
+    }
+  }
+}
