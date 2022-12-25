@@ -21,6 +21,7 @@ class DataController: ObservableObject {
   @Published var stationTimeTables: [Int: [StationTimeTable]] = [:]
   @Published var stationTrainsLive: [String: [TrainLive]] = [:]
   @Published var trainsLive: [String: TrainLive] = [:]
+  @Published var trainTimeTable: TrainTimeTable?
   
   @Published var showError = false
   @Published var token = Token(access_token: "", expires_in: 0, token_type: "")
@@ -219,4 +220,28 @@ class DataController: ObservableObject {
       }
     }.resume()
   }
+  
+  func queryTrainTimeTable(_ id: String) {
+    loading += 1
+    guard let url = URL(string: "\(TRA_V3_BASE)/DailyTrainTimetable/Today/TrainNo/\(id)?$format=JSON") else { return }
+    
+    session.dataTask(with: url) { data, response, error in
+      if let data = data {
+        do {
+          let xs = try JSONDecoder().decode(TrainTimeTablesDecode.self, from: data).TrainTimetables
+          
+          DispatchQueue.main.sync {
+            self.trainTimeTable = xs.first
+            self.loading -= 1
+            self.error = nil
+          }
+        } catch {
+          self.errorHandle(error)
+        }
+      } else {
+        self.errorHandle(error)
+      }
+    }.resume()
+  }
+
 }

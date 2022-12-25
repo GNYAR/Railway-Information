@@ -17,8 +17,22 @@ struct TrainTag: View {
       .scaleEffect(0.8)
       .buttonStyle(CTagButton(color: Color("TrainType\(trainTypeCode)")))
       .fullScreenCover(isPresented: $isActive) {
-        TrainView(isActive: $isActive, trainNo: trainNo)
+        TrainView(isActive: $isActive, trainNo: trainNo, trainTypeCode: trainTypeCode)
       }
     
+  }
+}
+
+struct CTagButton: ButtonStyle {
+  var color: Color = Color.accentColor
+  
+  func makeBody(configuration: Configuration) -> some View {
+    configuration.label
+      .lineLimit(1)
+      .padding(.horizontal, 8)
+      .padding(.vertical, 8)
+      .background(color)
+      .foregroundColor(.white)
+      .clipShape(RoundedRectangle(cornerRadius: 8))
   }
 }

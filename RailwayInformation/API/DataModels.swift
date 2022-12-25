@@ -33,6 +33,10 @@ struct TrainLiveBoardsDecode: Decodable {
   let TrainLiveBoards: [TrainLive]
 }
 
+struct TrainTimeTablesDecode: Decodable {
+  let TrainTimetables: [TrainTimeTable]
+}
+
 // Line
 struct Line: Decodable, Identifiable {
   var id: String { LineID }
@@ -89,6 +93,48 @@ struct StationTimeTable: Decodable, Identifiable {
 struct StationTimeTables: Decodable {
   let Direction: Int // [0:'順行',1:'逆行']
   let TimeTables: [StationTimeTable]
+}
+
+struct StopTime: Decodable, Identifiable {
+  var id: Int { StopSequence }
+  
+  let StopSequence: Int
+  let StationID: String
+  let StationName: Name
+  let ArrivalTime: String
+  let DepartureTime: String
+  let SuspendedFlag: Int // [0:'否',1:'是']
+}
+
+struct TrainInfo: Decodable {
+  let TrainNo: String
+  let Direction: Int
+  let TrainTypeCode: String
+  let TrainTypeName: Name
+  
+  let TripHeadSign: String
+  let StartingStationID: String
+  let StartingStationName: Name
+  let EndingStationID: String
+  let EndingStationName: Name
+  let TripLine: Int // [0:'不經山海線',1:'山線',2:'海線',3:'成追線']
+  
+  let WheelChairFlag: Int
+  let PackageServiceFlag: Int
+  let DiningFlag: Int
+  let BreastFeedFlag: Int
+  let BikeFlag: Int
+  
+  let DailyFlag: Int
+  let ExtraTrainFlag: Int
+  let SuspendedFlag: Int // [0:'正常行駛',1:'停駛',2:'部份停駛']
+  
+  let Note: String
+}
+
+struct TrainTimeTable: Decodable {
+  let TrainInfo: TrainInfo
+  let StopTimes: [StopTime]
 }
 
 // Train
