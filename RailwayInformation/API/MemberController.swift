@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import LocalAuthentication
 
 class MemberController: ObservableObject {
   @AppStorage("user") var appUser: Data?
@@ -117,5 +118,39 @@ class MemberController: ObservableObject {
   
   func logout() {
     user = User()
+  }
+  
+  @IBAction func localAuth() {
+    // 創建 LAContext 實例
+    let context = LAContext()
+    // 設置取消按鈕標題
+    //    context.localizedCancelTitle = "Cancel"
+    // 宣告一個變數接收 canEvaluatePolicy 返回的錯誤
+    var error: NSError?
+    // 評估是否可以針對給定方案進行身份驗證
+    if context.canEvaluatePolicy(.deviceOwnerAuthentication, error: &error) {
+      // 描述使用身份辨識的原因
+      let reason = "登入帳號"
+      // 評估指定方案
+      context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: reason) { [self] (success, error) in
+        do {
+          if success {
+            DispatchQueue.main.async { [unowned self] in
+              print("success")
+            }
+          } else {
+            DispatchQueue.main.async { [unowned self] in
+              print("failed")
+              logout()
+            }
+          }
+        } catch {
+          self.errorHandle(error)
+        }
+      }
+    } else {
+      logout()
+      errorHandle(error)
+    }
   }
 }

@@ -11,6 +11,7 @@ struct Member: View {
   @State var showLogin = false
   @State var showRegister = false
   @StateObject var memberController = MemberController()
+  @State var isFirst = true
   
   var body: some View {
     let isLogin = memberController.user?.login != nil
@@ -19,24 +20,36 @@ struct Member: View {
       
       if isLogin {
         Button("登出", action: { memberController.logout() })
+          .onAppear {
+            if isFirst { memberController.localAuth() }
+          }
       } else {
-        Button("註冊", action: { showRegister = true })
-          .sheet(isPresented: $showRegister) {
-            Register(
-              show: $showRegister,
-              controller: memberController
-            )
-          }
+        Button("註冊", action: {
+          showRegister = true
+          isFirst = false
+        })
+        .sheet(isPresented: $showRegister) {
+          Register(
+            show: $showRegister,
+            controller: memberController
+          )
+        }
         
-        Button("登入", action: { showLogin = true })
-          .sheet(isPresented: $showLogin) {
-            Register(
-              show: $showLogin,
-              controller: memberController,
-              isLoginAction: true
-            )
-          }
+        Button("登入", action: {
+          showLogin = true
+          isFirst = false
+        })
+        .sheet(isPresented: $showLogin) {
+          Register(
+            show: $showLogin,
+            controller: memberController,
+            isLoginAction: true
+          )
+        }
       }
+    }
+    .onDisappear {
+      isFirst = false
     }
   }
 }
