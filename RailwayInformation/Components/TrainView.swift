@@ -11,7 +11,7 @@ struct TrainView: View {
   @EnvironmentObject var dataController: DataController
   @Binding var isActive: Bool
   let trainNo: String
-  let trainTypeCode: String
+  var trainTypeCode: String?
   
   var body: some View {
     let timeTable = dataController.trainTimeTable
@@ -31,12 +31,28 @@ struct TrainView: View {
         })
       }
       .padding()
-      .background(Color("TrainType\(trainTypeCode)"))
+      .background(
+        Group {
+          if trainTypeCode != nil {
+            Color("TrainType\(trainTypeCode!)")
+          } else if timeTable?.TrainInfo.TrainTypeCode != nil {
+            Color("TrainType\(timeTable!.TrainInfo.TrainTypeCode)")
+          } else {
+            Color(.gray)
+          }
+        }
+      )
       
       if dataController.loading == 0 {
-        TrainInfoView(trainInfo: timeTable?.TrainInfo)
-          .padding(.horizontal)
-        TrainTimeView(stopTimes: timeTable?.StopTimes)
+        if timeTable == nil {
+          Spacer()
+          Text("查無資料").foregroundColor(.secondary)
+          Spacer()
+        } else {
+          TrainInfoView(trainInfo: timeTable?.TrainInfo)
+            .padding(.horizontal)
+          TrainTimeView(stopTimes: timeTable?.StopTimes)
+        }
       } else {
         LottieView(lottieFile: "loading", loop: .loop)
       }

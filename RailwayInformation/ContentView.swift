@@ -18,6 +18,11 @@ struct ContentView: View {
         StationList().tabItem {
           Label("車站列表", systemImage: "list.dash")
         }
+        
+        Search().tabItem {
+          Label("搜  尋", systemImage: "magnifyingglass")
+        }
+        
         Member().tabItem {
           Label("我的帳號", systemImage: "person.fill")
         }
