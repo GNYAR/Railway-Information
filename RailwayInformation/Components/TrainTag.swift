@@ -17,7 +17,7 @@ struct TrainTag: View {
       .scaleEffect(0.8)
       .buttonStyle(CTagButton(color: Color("TrainType\(trainTypeCode)")))
       .fullScreenCover(isPresented: $isActive) {
-        TrainView(isActive: $isActive, trainNo: trainNo)
+        TrainView(isActive: $isActive, trainNo: trainNo, trainTypeCode: trainTypeCode)
       }
     
   }
