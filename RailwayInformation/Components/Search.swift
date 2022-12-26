@@ -12,6 +12,27 @@ struct Search: View {
   @State var isTrainShow: Bool = false
   @State var keyword: String = ""
   
+  @AppStorage("searchRecords") var appRecords: Data?
+  @State var records: [Record] = [] {
+    didSet {
+      do {
+        appRecords = try JSONEncoder().encode(records)
+      } catch {
+        print(error)
+      }
+    }
+  }
+  
+  init() {
+    if let appRecords = appRecords {
+      do {
+        records = try JSONDecoder().decode([Record].self, from: appRecords)
+      } catch {
+        print(error)
+      }
+    }
+  }
+  
   var body: some View {
     let xs = dataController.stations.sorted(by: {a, b in
       a.key < b.key
@@ -68,6 +89,11 @@ struct Search: View {
       .navigationTitle("搜尋")
       .navigationBarHidden(true)
     }
+  }
+  
+  struct Record: Codable {
+    var station: Station?
+    var trainNo: String?
   }
 }
 

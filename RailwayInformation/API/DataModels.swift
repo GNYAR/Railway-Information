@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Name: Decodable {
+struct Name: Codable {
   let Zh_tw: String
   let En: String
 }
@@ -56,7 +56,7 @@ struct LineStation: Decodable, Identifiable {
 }
 
 // Station
-struct Station: Decodable, Identifiable {
+struct Station: Codable, Identifiable {
   var id: String { StationUID }
   
   let StationUID: String
