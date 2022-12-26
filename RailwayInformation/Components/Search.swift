@@ -23,16 +23,6 @@ struct Search: View {
     }
   }
   
-  init() {
-    if let appRecords = appRecords {
-      do {
-        records = try JSONDecoder().decode([Record].self, from: appRecords)
-      } catch {
-        print(error)
-      }
-    }
-  }
-  
   var body: some View {
     let xs = dataController.stations.sorted(by: {a, b in
       a.key < b.key
@@ -49,12 +39,45 @@ struct Search: View {
         SearchBar(text: $keyword, placeHolder: "搜尋車站／今日車次")
           .padding(.top)
         
-        
-        if keyword == "" {
+        if keyword == "" && records.isEmpty {
           Spacer()
           Text("請輸入關鍵字")
             .foregroundColor(.secondary)
           Spacer()
+          
+        } else if keyword == "" && !(records.isEmpty) {
+          let reversed = records.reversed()
+          let stations = reversed.filter({ $0.station != nil })
+            .map({ $0.station! })
+          
+          HStack {
+            Text("歷史紀錄")
+              .foregroundColor(.secondary)
+            
+            Spacer()
+            
+            Button("清除全部", action: { records.removeAll() })
+          }.padding(.horizontal)
+          
+          List {
+            ForEach(stations) { x in
+              NavigationLink(
+                x.StationName.Zh_tw,
+                destination: StationView(id: x.StationID)
+                  .onAppear {
+                    let index = getStationIndexInRecords(x)
+                    records.move(
+                      fromOffsets: IndexSet(integer: index!),
+                      toOffset: records.count
+                    )
+                  }
+              )
+            }
+            .onDelete { index in
+              let x = stations[index.first!]
+              records.remove(at: getStationIndexInRecords(x)!)
+            }
+          }
           
         } else if isAllNumber {
           HStack {
@@ -80,20 +103,35 @@ struct Search: View {
               NavigationLink(
                 x.StationName.Zh_tw,
                 destination: StationView(id: x.StationID)
+                  .onAppear { records.append(Record(station: x)) }
               )
             }
           }
-          .listStyle(PlainListStyle())
         }
       }
       .navigationTitle("搜尋")
       .navigationBarHidden(true)
+      .listStyle(PlainListStyle())
+    }
+    .onAppear {
+      if let appRecords = appRecords {
+        do {
+          records = try JSONDecoder().decode([Record].self, from: appRecords)
+        } catch {
+          print(error)
+        }
+      }
     }
   }
   
   struct Record: Codable {
     var station: Station?
     var trainNo: String?
+  }
+  
+  func getStationIndexInRecords(_ x: Station) -> Int? {
+    records
+      .firstIndex(where: { $0.station?.id == x.id })
   }
 }
 
