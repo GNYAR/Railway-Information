@@ -28,7 +28,8 @@ struct StationList: View {
           
           HStack(alignment: .bottom) {
             Text(lineName)
-              .font(.title)
+              .font(.largeTitle)
+              .bold()
           }
         }
         .padding([.horizontal, .top])
