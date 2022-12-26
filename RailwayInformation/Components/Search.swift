@@ -47,6 +47,8 @@ struct Search: View {
           
         } else if keyword == "" && !(records.isEmpty) {
           let reversed = records.reversed()
+          let trains = reversed.filter({ $0.train != nil })
+            .map({ $0.train! })
           let stations = reversed.filter({ $0.station != nil })
             .map({ $0.station! })
           
@@ -58,6 +60,16 @@ struct Search: View {
             
             Button("清除全部", action: { records.removeAll() })
           }.padding(.horizontal)
+          
+          ScrollView(.horizontal) {
+            HStack {
+              ForEach(trains) { x in
+                TrainTag(trainNo: x.trainNo, trainTypeCode: x.trainTypeCode)
+              }
+            }.padding(.horizontal)
+          }
+          
+          Divider().padding(.horizontal)
           
           List {
             ForEach(stations) { x in
@@ -84,6 +96,15 @@ struct Search: View {
             Button("搜尋今日車次 \(keyword)", action: { isTrainShow = true })
               .fullScreenCover(isPresented: $isTrainShow) {
                 TrainView( isActive: $isTrainShow, trainNo: keyword)
+                  .onDisappear {
+                    let train = dataController.trainTimeTable?.TrainInfo
+                    if train == nil { return }
+                    
+                    records.append(Record(train: TrainRecord(
+                      trainNo: train!.TrainNo,
+                      trainTypeCode: train!.TrainTypeCode
+                    )))
+                  }
               }
             
             Spacer()
@@ -126,7 +147,14 @@ struct Search: View {
   
   struct Record: Codable {
     var station: Station?
-    var trainNo: String?
+    var train: TrainRecord?
+  }
+  
+  struct TrainRecord: Codable, Identifiable {
+    var id: String { trainNo }
+    
+    let trainNo: String
+    let trainTypeCode: String
   }
   
   func getStationIndexInRecords(_ x: Station) -> Int? {
