@@ -16,15 +16,19 @@ struct ContentView: View {
     } else {
       TabView {
         StationList().tabItem {
-          Label("車站列表", systemImage: "list.dash")
+          Label("首頁", systemImage: "tram")
         }
         
         Search().tabItem {
-          Label("搜  尋", systemImage: "magnifyingglass")
+          Label("搜尋", systemImage: "magnifyingglass")
+        }
+        
+        Collection().tabItem {
+          Label("收藏", systemImage: "text.badge.star")
         }
         
         Member().tabItem {
-          Label("我的帳號", systemImage: "person.fill")
+          Label("帳號", systemImage: "person.fill")
         }
       }
       .onAppear(perform: {
