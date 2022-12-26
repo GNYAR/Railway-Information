@@ -23,9 +23,9 @@ struct ContentView: View {
           Label("搜尋", systemImage: "magnifyingglass")
         }
         
-        Collection().tabItem {
-          Label("收藏", systemImage: "text.badge.star")
-        }
+//        Collection().tabItem {
+//          Label("收藏", systemImage: "text.badge.star")
+//        }
         
         Member().tabItem {
           Label("帳號", systemImage: "person.fill")
