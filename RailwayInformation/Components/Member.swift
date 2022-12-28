@@ -71,16 +71,14 @@ struct Member: View {
       Spacer()
     }
     .onChange(of: isLogin, perform: { x in
-      if x {
-        isAnimationComplete = false
-        showAnimation = true
-      }
+      isAnimationComplete = false
+      showAnimation = true
     })
     .onDisappear { isFirst = false }
     .overlay(Group {
       if showAnimation && !isAnimationComplete {
         LottieView(
-          lottieFile: "checked",
+          lottieFile: isLogin ? "checked" : "logout",
           isComplete: $isAnimationComplete
         )
       }
