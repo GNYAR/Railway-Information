@@ -11,6 +11,7 @@ import Lottie
 struct LottieView: UIViewRepresentable {
   let lottieFile: String
   var loop: LottieLoopMode = .playOnce
+  @Binding var isComplete: Bool
   
   let animationView = LottieAnimationView()
   
@@ -20,7 +21,9 @@ struct LottieView: UIViewRepresentable {
     animationView.animation = Animation.named(lottieFile)
     animationView.contentMode = .scaleAspectFit
     animationView.loopMode = loop
-    animationView.play()
+    animationView.play(completion: { x in
+      if x { isComplete = x }
+    })
     
     view.addSubview(animationView)
     

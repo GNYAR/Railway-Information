@@ -8,49 +8,83 @@
 import SwiftUI
 
 struct Member: View {
+  @State var showAnimation = false
   @State var showLogin = false
   @State var showRegister = false
   @StateObject var memberController = MemberController()
   @State var isFirst = true
+  @State var isAnimationComplete = false
   
   var body: some View {
-    let isLogin = memberController.user?.login != nil
+    let acc = memberController.user?.login
+    let isLogin = acc != nil
+    
     VStack {
-      Text(memberController.user?.login ?? "尚未登入")
-      
-      if isLogin {
-        Button("登出", action: { memberController.logout() })
-          .onAppear {
-            if isFirst { memberController.localAuth() }
-          }
-      } else {
-        Button("註冊", action: {
-          showRegister = true
-          isFirst = false
-        })
-        .sheet(isPresented: $showRegister) {
-          Register(
-            show: $showRegister,
-            controller: memberController
-          )
+      HStack(spacing: 24) {
+        ZStack {
+          Circle()
+            .frame(width: 50, height: 50)
+            .foregroundColor(.accentColor)
+          
+          Text(acc?.prefix(1) ?? "?")
+            .foregroundColor(.white)
+            .font(.title)
         }
         
-        Button("登入", action: {
-          showLogin = true
-          isFirst = false
-        })
-        .sheet(isPresented: $showLogin) {
-          Register(
-            show: $showLogin,
-            controller: memberController,
-            isLoginAction: true
-          )
+        Text(acc ?? "尚未登入")
+          .font(.title3)
+        
+        Spacer()
+        
+        if isLogin {
+          Button("登出", action: { memberController.logout() })
+            .onAppear {
+              if isFirst { memberController.localAuth() }
+            }
+        } else {
+          Button("註冊", action: {
+            showRegister = true
+            isFirst = false
+          })
+          .sheet(isPresented: $showRegister) {
+            Register(
+              show: $showRegister,
+              controller: memberController
+            )
+          }
+          
+          Button("登入", action: {
+            showLogin = true
+            isFirst = false
+          })
+          .buttonStyle(CButton())
+          .sheet(isPresented: $showLogin) {
+            Register(
+              show: $showLogin,
+              controller: memberController,
+              isLoginAction: true
+            )
+          }
         }
+      }.padding()
+      
+      Spacer()
+    }
+    .onChange(of: isLogin, perform: { x in
+      if x {
+        isAnimationComplete = false
+        showAnimation = true
       }
-    }
-    .onDisappear {
-      isFirst = false
-    }
+    })
+    .onDisappear { isFirst = false }
+    .overlay(Group {
+      if showAnimation && !isAnimationComplete {
+        LottieView(
+          lottieFile: "checked",
+          isComplete: $isAnimationComplete
+        )
+      }
+    })
   }
 }
 

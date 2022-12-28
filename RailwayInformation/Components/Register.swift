@@ -18,17 +18,8 @@ struct Register: View {
   var body: some View {
     let action = isLoginAction ? "登入" : "註冊"
     
-    if controller.user?.login != nil {
-      Text("\(action)成功！")
-        .onAppear {
-          Timer.scheduledTimer(
-            withTimeInterval: 3,
-            repeats: false
-          ) { _ in show = false }
-        }
-    }
-    else if controller.isLoading {
-      ProgressView()
+    if controller.isLoading {
+      LottieView(lottieFile: "loading", loop: .loop, isComplete: .constant(false))
     } else {
       Form {
         Section(

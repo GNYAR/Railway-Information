@@ -54,7 +54,7 @@ struct TrainView: View {
           TrainTimeView(stopTimes: timeTable?.StopTimes)
         }
       } else {
-        LottieView(lottieFile: "loading", loop: .loop)
+        LottieView(lottieFile: "loading", loop: .loop, isComplete: .constant(false))
       }
       
       Spacer()
