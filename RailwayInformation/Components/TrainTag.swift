@@ -19,7 +19,6 @@ struct TrainTag: View {
       .fullScreenCover(isPresented: $isActive) {
         TrainView(isActive: $isActive, trainNo: trainNo, trainTypeCode: trainTypeCode)
       }
-    
   }
 }
 

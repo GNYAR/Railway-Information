@@ -12,14 +12,23 @@ struct ContentView: View {
   
   var body: some View {
     if (dataController.tokenLoading) != 0 {
-      LottieView(lottieFile: "loading", loop: .loop)
+      LottieView(lottieFile: "loading", loop: .loop, isComplete: .constant(false))
     } else {
       TabView {
         StationList().tabItem {
-          Label("車站列表", systemImage: "list.dash")
+          Label("首頁", systemImage: "tram")
         }
+        
+        Search().tabItem {
+          Label("搜尋", systemImage: "magnifyingglass")
+        }
+        
+//        Collection().tabItem {
+//          Label("收藏", systemImage: "text.badge.star")
+//        }
+        
         Member().tabItem {
-          Label("我的帳號", systemImage: "person.fill")
+          Label("帳號", systemImage: "person.fill")
         }
       }
       .onAppear(perform: {

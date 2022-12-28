@@ -1,19 +1,10 @@
 # Railway-Information
 
-### Todo
-- drag refresh/refresh button?
-- search
-- share
-- stroe and delete
-- something not in the lesson
-
-### WIP
-- Train View
-
 ### Done
 - Member
   - api: favqs
-  - app storage
+  - last login account (app storage)
+  - local authentication (touch id, face id)
 - Station List
   - api: tdx
   - train live
@@ -21,8 +12,16 @@
 - Station View
   - time list
   - auto refresh
-- Loading
-  - package(lottie)
+  - share station url
+- TrainView
+  - train info
+  - stop times
+- Search
+  - station/train
+  - history (app storage)
+- Animation - package(lottie)
+  - loading
+  - login/logout
 
 ---
 

@@ -12,6 +12,7 @@ struct StationView: View {
   @State var nextTrainSequence: Int? = nil
   @State var updatedTime = Date()
   @State var selectedDirection = 0
+  @State var isShareLink: Bool = false
   let id: String
   
   let timer = Timer.publish(every: 30, on: .main, in: .common).autoconnect()
@@ -22,7 +23,7 @@ struct StationView: View {
     
     ScrollViewReader { proxy in
       if (dataController.loading != 0) {
-        LottieView(lottieFile: "loading", loop: .loop)
+        LottieView(lottieFile: "loading", loop: .loop, isComplete: .constant(false))
       } else {
         ScrollView(.vertical) {
           LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
@@ -68,6 +69,14 @@ struct StationView: View {
       }
     }
     .navigationTitle(station?.StationName.Zh_tw ?? "Not Found")
+    .navigationBarItems(
+      trailing: Button(action: { isShareLink = true }) {
+        Image(systemName: "info.circle")
+      }
+    )
+    .sheet(isPresented: $isShareLink, content: {
+      Share(urlString: station?.StationURL ?? "https://google.com")
+    })
     .onAppear() {
       dataController.queryStationTimeTables(id)
       refreshTrainLive()
